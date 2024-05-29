@@ -4,6 +4,9 @@ import express from "express";
 import cors from "cors";
 import pkg from "body-parser";
 const { json, urlencoded } = pkg;
+import adminRouter from "./routers/admin.js";
+import departmentRouter from "./routers/department.js";
+import employeeRouter from "./routers/employee.js";
 
 // Create and configure
 const app = express();
@@ -21,6 +24,10 @@ app.get("/", (req, res) => {
 app.get("/error", (req, res) => {
   throw new Error("Something has gone terribly wrong...");
 });
+
+app.use("/", adminRouter);
+app.use("/", departmentRouter);
+app.use("/", employeeRouter);
 
 // Error Handling
 // Unknown Request handler
