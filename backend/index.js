@@ -1,4 +1,5 @@
-// import("dotenv").config();
+// import config from "dotenv";
+import {} from "dotenv/config";
 const port = 3000;
 // const app = import("./src/app");
 import app from "./src/app.js";
