@@ -28,7 +28,7 @@ const Employee = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.Status) {
-          window.location.reload();
+          setEmployee(employee.filter((e) => e.id !== id));
         } else {
           console.log(data.message);
         }

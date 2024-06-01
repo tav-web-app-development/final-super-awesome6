@@ -27,7 +27,7 @@ const Department = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.Status) {
-          window.location.reload();
+          setDepartment(department.filter((d) => d.id !== id));
         } else {
           console.log(data.message);
         }

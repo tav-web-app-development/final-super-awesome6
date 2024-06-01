@@ -31,7 +31,7 @@ const Home = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.Status) {
-          window.location.reload();
+          setAdmins(admins.filter((a) => a.id !== id));
         } else {
           console.log(data.message);
         }
