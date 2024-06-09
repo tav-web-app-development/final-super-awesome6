@@ -2,11 +2,14 @@
 //Imports
 import express from "express";
 import cors from "cors";
-import pkg from "body-parser";
-const { json, urlencoded } = pkg;
+import bodyParser from "body-parser";
+const { json, urlencoded } = bodyParser;
 import adminRouter from "./routers/admin.js";
 import departmentRouter from "./routers/department.js";
 import employeeRouter from "./routers/employee.js";
+import { connect } from "../database/db_config.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 // Create and configure
 const app = express();
@@ -28,6 +31,8 @@ app.get("/error", (req, res) => {
 app.use("/", adminRouter);
 app.use("/", departmentRouter);
 app.use("/", employeeRouter);
+
+connect();
 
 // Error Handling
 // Unknown Request handler

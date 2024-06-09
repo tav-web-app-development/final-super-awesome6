@@ -1,10 +1,11 @@
-import db from "../../database/db_config.js";
+import { client } from "../../database/db_config.js";
 
 async function createAdmin(email, password) {
-  const stmnt = db.prepare("INSERT INTO admin (email,password) VALUES(?, ?)");
+  const stmnt =
+    "INSERT INTO admin (email,password) VALUES($1, $2) RETURNING id";
 
   try {
-    const info = await stmnt.run([email, password]);
+    const info = await client.query(stmnt, [email, password]);
 
     return info;
   } catch (err) {
@@ -15,12 +16,10 @@ async function createAdmin(email, password) {
 }
 
 async function doAdminLogin(email, password) {
-  const stmnt = db.prepare(
-    "SELECT * FROM admin WHERE email = ? AND password =?"
-  );
-
+  const stmnt = "SELECT * FROM admin WHERE email = $1 AND password = $2";
   try {
-    const info = await stmnt.get([email, password]);
+    const info = await client.query(stmnt, [email, password]);
+
     return info;
   } catch (err) {
     console.error("Error:", err.message);
@@ -30,10 +29,11 @@ async function doAdminLogin(email, password) {
 }
 
 async function getAllAdmins() {
-  const stmnt = db.prepare("SELECT * FROM admin ");
+  const stmnt = "SELECT * FROM admin ";
 
   try {
-    const info = stmnt.all();
+    const info = await client.query(stmnt);
+
     return info;
   } catch (err) {
     console.error("Error:", err.message);
@@ -43,15 +43,12 @@ async function getAllAdmins() {
 }
 
 async function deleteAdminByCredentials(email, password) {
-  const stmnt = db.prepare("DELETE FROM admin WHERE email=? AND PASSWORD=?");
-  try {
-    const info = stmnt.run(email, password);
+  const stmnt = "DELETE FROM admin WHERE email=$1 AND PASSWORD=$2 RETURNING id";
 
-    if (info.changes > 0) {
-      return info;
-    } else {
-      return undefined;
-    }
+  try {
+    const info = await client.query(stmnt, [email, password]);
+
+    return info;
   } catch (err) {
     console.error("Error:", err.message);
 

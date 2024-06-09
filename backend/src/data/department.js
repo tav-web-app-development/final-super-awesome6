@@ -1,10 +1,10 @@
-import db from "../../database/db_config.js";
+import { client } from "../../database/db_config.js";
 
 async function addDepartment(name) {
-  const stmnt = db.prepare("INSERT INTO department (name) VALUES(?) ");
+  const stmnt = "INSERT INTO department (name) VALUES($1) RETURNING id";
 
   try {
-    const info = stmnt.run([name.toUpperCase()]);
+    const info = await client.query(stmnt, [name.toUpperCase()]);
 
     return info;
   } catch (err) {
@@ -17,10 +17,10 @@ async function addDepartment(name) {
 async function getDepartmentByName(department) {
   const departmentName = department.toUpperCase();
 
-  const stmnt = db.prepare("SELECT * FROM department WHERE name=?");
+  const stmnt = "SELECT * FROM department WHERE name=$1";
 
   try {
-    const info = stmnt.get(departmentName);
+    const info = await client.query(stmnt, [departmentName]);
 
     return info;
   } catch (err) {
@@ -31,10 +31,10 @@ async function getDepartmentByName(department) {
 }
 
 async function getAllDepartments() {
-  const stmnt = db.prepare("SELECT * FROM department");
+  const stmnt = "SELECT * FROM department";
 
   try {
-    const info = stmnt.all();
+    const info = await client.query(stmnt);
     return info;
   } catch (err) {
     console.error("Error:", err.message);
@@ -43,16 +43,12 @@ async function getAllDepartments() {
   }
 }
 async function deleteDepartmentById(id) {
-  const stmnt = db.prepare("DELETE FROM department WHERE id = ?");
+  const stmnt = "DELETE FROM department WHERE id = $1 RETURNING id";
 
   try {
-    const info = stmnt.run(id);
+    const info = await client.query(stmnt, [id]);
 
-    if (info.changes > 0) {
-      return info;
-    } else {
-      return undefined;
-    }
+    return info;
   } catch (err) {
     console.error("Error:", err.message);
 

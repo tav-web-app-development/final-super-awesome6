@@ -22,7 +22,7 @@ router.post("/employee/add", async (req, res) => {
   };
 
   if (Object.values(employee).every((value) => value)) {
-    const addedEmployee = await addEmployee(employee);
+    const addedEmployee = await addEmployee(Object.values(employee));
 
     if (addedEmployee) {
       res.json({
@@ -105,7 +105,7 @@ router.put("/employee/:id/update", async (req, res) => {
   };
 
   if (values.id) {
-    const employee = await updateEmployeeById(values);
+    const employee = await updateEmployeeById(Object.values(values));
     if (employee) {
       res.json({ Status: true, data: employee });
     } else {

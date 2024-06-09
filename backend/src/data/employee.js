@@ -1,13 +1,10 @@
-import db from "../../database/db_config.js";
-
-// const db = require("../../database/db_config").default;
+import { client } from "../../database/db_config.js";
 
 async function addEmployee(employee) {
-  const stmnt = db.prepare(
-    "INSERT INTO employee (name, email, password, salary, dept_id) VALUES (:name, :email, :password, :salary, :dept_id)"
-  );
+  const stmnt =
+    "INSERT INTO employee (name, email, password, salary, dept_id) VALUES ($1,$2,$3,$4,$5) RETURNING id";
   try {
-    const info = stmnt.run(employee);
+    const info = await client.query(stmnt, [employee]);
     return info;
   } catch (err) {
     console.error("Error:", err.message);
@@ -17,10 +14,10 @@ async function addEmployee(employee) {
 }
 
 async function getEmployeeById(id) {
-  const stmnt = db.prepare("SELECT * FROM employee WHERE id=?");
+  const stmnt = "SELECT * FROM employee WHERE id=$1";
 
   try {
-    const info = stmnt.get(id);
+    const info = await client.query(stmnt, [id]);
     return info;
   } catch (err) {
     console.error("Error:", err.message);
@@ -30,9 +27,9 @@ async function getEmployeeById(id) {
 }
 
 async function getAllEmployees() {
-  const stmnt = db.prepare("SELECT * FROM employee ");
+  const stmnt = "SELECT * FROM employee ";
   try {
-    const info = stmnt.all();
+    const info = await client.query(stmnt);
     return info;
   } catch (err) {
     console.error("Error:", err.message);
@@ -42,9 +39,9 @@ async function getAllEmployees() {
 }
 
 async function getEmployeesByDepartmentId(dept_id) {
-  const stmnt = db.prepare("SELECT * FROM employee WHERE dept_id=?");
+  const stmnt = "SELECT * FROM employee WHERE dept_id=$1";
   try {
-    const info = stmnt.all(dept_id);
+    const info = await client.query(stmnt, dept_id);
     return info;
   } catch (err) {
     console.error("Error:", err.message);
@@ -54,16 +51,12 @@ async function getEmployeesByDepartmentId(dept_id) {
 }
 
 async function deleteEmployeeById(id) {
-  const stmnt = db.prepare("DELETE FROM employee WHERE id=?");
+  const stmnt = "DELETE FROM employee WHERE id=$1 RETURNING id";
 
   try {
-    const info = stmnt.run(id);
+    const info = await client.query(stmnt, id);
 
-    if (info.changes > 0) {
-      return info;
-    } else {
-      return undefined;
-    }
+    return info;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -72,16 +65,12 @@ async function deleteEmployeeById(id) {
 }
 
 async function updateEmployeeById(values) {
-  const stmnt = db.prepare(
-    "UPDATE employee set name = :name , email =:email, salary = :salary, dept_id =:dept_id  Where id = :id"
-  );
+  const stmnt =
+    "UPDATE employee set name = $1 , email = $2, salary = $3, dept_id =$4  Where id = $5 RETURNING id";
   try {
-    const info = stmnt.run(values);
-    if (info.changes > 0) {
-      return info;
-    } else {
-      return undefined;
-    }
+    const info = await client.query(stmnt, [values]);
+
+    return info;
   } catch (err) {
     console.error("Error:", err.message);
 
