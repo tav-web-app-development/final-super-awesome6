@@ -7,7 +7,7 @@ async function createAdmin(email, password) {
   try {
     const info = await client.query(stmnt, [email, password]);
 
-    return info;
+    return info.rows[0].id;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -20,7 +20,7 @@ async function doAdminLogin(email, password) {
   try {
     const info = await client.query(stmnt, [email, password]);
 
-    return info;
+    return info.rows[0];
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -34,7 +34,7 @@ async function getAllAdmins() {
   try {
     const info = await client.query(stmnt);
 
-    return info;
+    return info.rows;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -48,7 +48,7 @@ async function deleteAdminByCredentials(email, password) {
   try {
     const info = await client.query(stmnt, [email, password]);
 
-    return info;
+    return info.rows[0].id;
   } catch (err) {
     console.error("Error:", err.message);
 

@@ -6,7 +6,7 @@ async function addDepartment(name) {
   try {
     const info = await client.query(stmnt, [name.toUpperCase()]);
 
-    return info;
+    return info.rows[0].id;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -16,13 +16,11 @@ async function addDepartment(name) {
 
 async function getDepartmentByName(department) {
   const departmentName = department.toUpperCase();
-
-  const stmnt = "SELECT * FROM department WHERE name=$1";
+  const stmnt = "SELECT * FROM department WHERE name =$1";
 
   try {
     const info = await client.query(stmnt, [departmentName]);
-
-    return info;
+    return info.rows[0];
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -35,20 +33,22 @@ async function getAllDepartments() {
 
   try {
     const info = await client.query(stmnt);
-    return info;
+
+    return info.rows;
   } catch (err) {
     console.error("Error:", err.message);
 
     return undefined;
   }
 }
+
 async function deleteDepartmentById(id) {
   const stmnt = "DELETE FROM department WHERE id = $1 RETURNING id";
 
   try {
     const info = await client.query(stmnt, [id]);
 
-    return info;
+    return info.rows[0].id;
   } catch (err) {
     console.error("Error:", err.message);
 

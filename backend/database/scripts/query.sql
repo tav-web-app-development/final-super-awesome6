@@ -34,12 +34,14 @@ VALUES
 INSERT INTO Department (name) 
 VALUES
 ('IT'),
-('MARKETING');
+('MARKETING'),
+('NETWORK');
 
 -- Insert data into the Employee table
 INSERT INTO Employee (name, email, password, salary, dept_id)
 VALUES
 ('aaa', 'a@a.com', 'aaa', 6000000, 1),
 ('bbb', 'b@b.com', 'bbb', 300000, 2),
-('ccc', 'c@c.com', 'ccc', 4000000, 1);
+('ccc', 'c@c.com', 'ccc', 4000000, 1),
+('ddd', 'd@d.com', 'ddd', 60000, 3);
 

@@ -4,8 +4,9 @@ async function addEmployee(employee) {
   const stmnt =
     "INSERT INTO employee (name, email, password, salary, dept_id) VALUES ($1,$2,$3,$4,$5) RETURNING id";
   try {
-    const info = await client.query(stmnt, [employee]);
-    return info;
+    const info = await client.query(stmnt, employee);
+
+    return info.rows[0].id;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -14,11 +15,12 @@ async function addEmployee(employee) {
 }
 
 async function getEmployeeById(id) {
-  const stmnt = "SELECT * FROM employee WHERE id=$1";
+  const stmnt = "SELECT * FROM employee WHERE id = $1";
 
   try {
     const info = await client.query(stmnt, [id]);
-    return info;
+
+    return info.rows[0];
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -27,10 +29,11 @@ async function getEmployeeById(id) {
 }
 
 async function getAllEmployees() {
-  const stmnt = "SELECT * FROM employee ";
+  const stmnt = "SELECT * FROM employee";
   try {
     const info = await client.query(stmnt);
-    return info;
+
+    return info.rows;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -41,8 +44,9 @@ async function getAllEmployees() {
 async function getEmployeesByDepartmentId(dept_id) {
   const stmnt = "SELECT * FROM employee WHERE dept_id=$1";
   try {
-    const info = await client.query(stmnt, dept_id);
-    return info;
+    const info = await client.query(stmnt, [dept_id]);
+
+    return info.rows;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -51,12 +55,12 @@ async function getEmployeesByDepartmentId(dept_id) {
 }
 
 async function deleteEmployeeById(id) {
-  const stmnt = "DELETE FROM employee WHERE id=$1 RETURNING id";
+  const stmnt = "DELETE FROM employee WHERE id=$1 RETURNING *";
 
   try {
-    const info = await client.query(stmnt, id);
+    const info = await client.query(stmnt, [id]);
 
-    return info;
+    return info.rows[0].id;
   } catch (err) {
     console.error("Error:", err.message);
 
@@ -66,11 +70,12 @@ async function deleteEmployeeById(id) {
 
 async function updateEmployeeById(values) {
   const stmnt =
-    "UPDATE employee set name = $1 , email = $2, salary = $3, dept_id =$4  Where id = $5 RETURNING id";
-  try {
-    const info = await client.query(stmnt, [values]);
+    "UPDATE employee set name = $2 , email = $3, salary = $4, dept_id =$5  Where id = $1 RETURNING id";
 
-    return info;
+  try {
+    const info = await client.query(stmnt, values);
+
+    return info.rows[0].id;
   } catch (err) {
     console.error("Error:", err.message);
 
