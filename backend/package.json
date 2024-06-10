@@ -8,7 +8,7 @@
     "test": "jest",
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "db:init": "psql postgres://malav:ZHAzEU4qD2b0MQPyXgQQ6ekYhSLBy51Y@dpg-cpf4v3tds78s739697s0-a.ohio-postgres.render.com/employee_5xcq -f ./database/scripts/query.sql"
+    "db:init": "psql $DATABASE_URL < $SCRIPT_URL"
   },
   "author": "Malav",
   "license": "MIT",
